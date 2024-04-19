@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cadastro-cliente-app
+  labels:
+    app: cadastro-cliente-app
+spec:
+  containers:
+    - name: cadastro-cliente-app
+      image: gustavo4642/cadastro-cliente-app:0.1
+      imagePullPolicy: Always
+  restartPolicy: Always

@@ -1,7 +1,7 @@
 FROM amazoncorretto:17-al2023
 WORKDIR /app
 ARG SERVER_PORT=8080
-ENV DB_USER=root
+ENV DB_USER="gustavo"
 ENV DB_PASSWORD=4642941
 COPY devops-example-0.0.1-SNAPSHOT.jar /app/devops-example-0.0.1-SNAPSHOT.jar
 EXPOSE $SERVER_PORT

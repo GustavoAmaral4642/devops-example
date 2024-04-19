@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cadastro-cliente-app
+  labels:
+    app: cadastro-cliente-app
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: cadastro-cliente-app
+  template:
+    metadata:
+      name: cadastro-cliente-app
+      labels:
+        app: cadastro-cliente-app
+    spec:
+      containers:
+        - name: cadastro-cliente-app
+          image: gustavo4642/cadastro-cliente-app:0.1
+          imagePullPolicy: Always
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: /actuator/health
+            initialDelaySeconds: 10
+            failureThreshold: 3
+            periodSeconds: 5
+          livenessProbe:
+              httpGet:
+                port: 8080
+                path: /actuator/health
+      restartPolicy: Always
