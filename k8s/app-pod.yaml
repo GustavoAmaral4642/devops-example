@@ -1,12 +1,17 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: cadastro-cliente-app
+  name: cadastro-cliente
   labels:
     app: cadastro-cliente-app
 spec:
   containers:
-    - name: cadastro-cliente-app
-      image: gustavo4642/cadastro-cliente-app:0.1
-      imagePullPolicy: Always
+    - name: app-prometheus
+      image: prom/prometheus:latest
+      env:
+        - name: v
+          value: "/Users/Avell/Documents/Estudo/prometheus.yaml:/etc/prometheus/prometheus.yml"
+      ports:
+        - containerPort: 9090
+      imagePullPolicy: IfNotPresent
   restartPolicy: Always

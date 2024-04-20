@@ -5,7 +5,7 @@ metadata:
   labels:
     app: cadastro-cliente-app
 spec:
-  replicas: 4
+  replicas: 1
   selector:
     matchLabels:
       app: cadastro-cliente-app
@@ -15,6 +15,10 @@ spec:
       labels:
         app: cadastro-cliente-app
     spec:
+#      volumes:
+#        - name: prometheusyml
+#          hostPath:
+#            path: C:\Users\Avell\Documents\Estudo\prometheus.yml
       containers:
         - name: cadastro-cliente-app
           image: gustavo4642/cadastro-cliente-app:0.1
@@ -30,4 +34,28 @@ spec:
               httpGet:
                 port: 8080
                 path: /actuator/health
+        - name: db-clientes
+          image: postgres:latest
+          env:
+            - name: POSTGRES_PASSWORD
+              value: "4642941"
+          ports:
+            - containerPort: 5432
+          imagePullPolicy: IfNotPresent
+#        - name: app-prometheus
+#          image: prom/prometheus:latest
+#          ports:
+#            - containerPort: 9090
+#          volumeMounts:
+#            - mountPath: /etc/prometheus
+#              name: prometheusyml
+#          imagePullPolicy: IfNotPresent
+#        - name: postexporter
+#          image: quay.io/prometheuscommunity/postgres-exporter:latest
+#          env:
+#            - name: DATA_SOURCE_NAME
+#              value: "postgresql://localhost:5432/postgres@postgres:4642941?ssl=disable"
+#          ports:
+#            - containerPort: 9187
+#          imagePullPolicy: IfNotPresent
       restartPolicy: Always

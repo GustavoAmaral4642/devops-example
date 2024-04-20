@@ -7,6 +7,19 @@ spec:
   selector:
     app: cadastro-cliente-app
   ports:
-  - protocol: TCP 
+  - protocol: TCP
+    name: 'aplicacao'
     nodePort: 31001 
     port: 8080
+  - protocol: TCP
+    name: 'bancodedados'
+    nodePort: 31432
+    port: 5432
+#  - protocol: TCP
+#    name: 'prometheus'
+#    nodePort: 31090
+#    port: 9090
+#  - protocol: TCP
+#    name: 'postexporter'
+#    nodePort: 31187
+#    port: 9187
