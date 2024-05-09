@@ -45,7 +45,7 @@ public class ClientController {
     public ResponseEntity<?> getMedias(){
         IntStream.range(0,110).forEach(value -> {
             int valor = new Random().nextInt(130);
-            Counter counter= Counter.builder("media_idade_clientes_cadastrados")
+            Counter counter = Counter.builder("media_idade_clientes_cadastrados")
                     .tag("media_idade", "media")
                     .description("Media da idade de clientes cadastrados")
                     .register(meterRegistry);
@@ -55,13 +55,13 @@ public class ClientController {
             }else {
                 logger.info("Idade é: " +  valor);
             }
+            logger.info(counter.getId().toString());
         });
         return ResponseEntity.ok("OK");
     }
 
-    @GetMapping( value ="/valorVendaDiaria")
+    @GetMapping( value ="/valorVendaDiaria" )
     public ResponseEntity valorVendaDiaria(){
-        System.out.println("Aqui");
         Gauge.builder("valorVendaDiaria", () -> new Random().nextFloat(3000))
                 .description("Valor de venda diária")
                 .register(meterRegistry);

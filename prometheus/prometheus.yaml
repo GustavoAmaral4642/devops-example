@@ -3,8 +3,6 @@ global:
   scrape_interval: 15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
   evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
   # scrape_timeout is set to the global default (10s).
-  external_labels:
-    monitor: 'promswarm'
 
 # Alertmanager configuration
 alerting:
@@ -29,13 +27,23 @@ scrape_configs:
     metrics_path: "/actuator/prometheus"
     scrape_interval: 3s
     static_configs:
-      - targets: ["localhost:8080"]
-      #- targets: ["cadastro-cliente-app:8080"]
+#      - targets: ["localhost:8081"]
+      - targets: ["cadastro-cliente-app:8081"]
   - job_name: "postgres"
     scrape_interval: 3s
     static_configs:
-      - targets: [ "localhost:9187" ]
-      #- targets: [ "postexporter:9187" ]
+#      - targets: [ "172.20.0.3:9187" ]
+      - targets: [ "postexporter:9187" ]
 
   #docker run -p 9090:9090 -v /Users/leonardogloria/Documents/Projetos/Infnet/graduacao/devops/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml prom/prometheus
-  #docker run --name=postexporter -e DATA_SOURCE_NAME="postgresql://localhost:31432/postgres@postgres:4642941?ssl=disable" -p 9187:9187 quay.io/prometheuscommunity/postgres-exporter
+#  docker run -p 9090:9090 --net=devops -v D:\Estudos\prometheus.yaml:/etc/prometheus/prometheus.yml prom/prometheus
+  #docker run --name=postexporter -e DATA_SOURCE_NAME="postgresql://postgres:4642941@dbteste:5432?ssl=disable" -p 9187:9187 -d quay.io/prometheuscommunity/postgres-exporter
+
+  #comando para criar container do postgres
+#  docker run -p 5435:5432 -d --net=devops -e POSTGRES_PASSWORD=4642941 --name dbteste postgres
+
+# apontar o application.properties para o dbteste, ao inves de localhost.
+# buildar a aplicação docker
+# docker build . -t gustavo4642/cadastro-cliente-app:0.1
+# subir a aplicação no docker
+# docker run --name cadastro-cliente-app -p 8081:8081 --net=devops  gustavo4642/cadastro-cliente-app:0.1

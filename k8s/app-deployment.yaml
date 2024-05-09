@@ -15,10 +15,13 @@ spec:
       labels:
         app: cadastro-cliente-app
     spec:
-#      volumes:
-#        - name: prometheusyml
-#          hostPath:
-#            path: C:\Users\Avell\Documents\Estudo\prometheus.yml
+      volumes:
+        - name: prometheus-config-volume
+          configMap:
+            defaultMode: 420
+            name: prometheus-server-conf
+        - name: prometheus-storage-volume
+          emptyDir: {}
       containers:
         - name: cadastro-cliente-app
           image: gustavo4642/cadastro-cliente-app:0.1
@@ -34,7 +37,7 @@ spec:
               httpGet:
                 port: 8080
                 path: /actuator/health
-        - name: db-clientes
+        - name: dbteste
           image: postgres:latest
           env:
             - name: POSTGRES_PASSWORD
@@ -42,20 +45,28 @@ spec:
           ports:
             - containerPort: 5432
           imagePullPolicy: IfNotPresent
-#        - name: app-prometheus
-#          image: prom/prometheus:latest
-#          ports:
-#            - containerPort: 9090
-#          volumeMounts:
-#            - mountPath: /etc/prometheus
-#              name: prometheusyml
-#          imagePullPolicy: IfNotPresent
-#        - name: postexporter
-#          image: quay.io/prometheuscommunity/postgres-exporter:latest
-#          env:
-#            - name: DATA_SOURCE_NAME
-#              value: "postgresql://localhost:5432/postgres@postgres:4642941?ssl=disable"
-#          ports:
-#            - containerPort: 9187
-#          imagePullPolicy: IfNotPresent
+        - name: app-prometheus
+          image: prom/prometheus
+          args:
+            - "--config.file=/etc/prometheus/prometheus.yml"
+            - "--storage.tsdb.path=/prometheus/"
+          ports:
+            - containerPort: 9090
+          volumeMounts:
+            - name: prometheus-config-volume
+              mountPath: /etc/prometheus/
+            - name: prometheus-storage-volume
+              mountPath: /prometheus/
+        - name: grafana
+          image: grafana/grafana-enterprise
+          ports:
+            - containerPort: 3000
+        - name: postexporter
+          image: quay.io/prometheuscommunity/postgres-exporter:latest
+          env:
+            - name: DATA_SOURCE_NAME
+              value: "postgresql://postgres:4642941@localhost:5432?ssl=disable"
+          ports:
+            - containerPort: 9187
+          imagePullPolicy: IfNotPresent
       restartPolicy: Always
